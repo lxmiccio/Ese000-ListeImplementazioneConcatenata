@@ -7,24 +7,12 @@
  */
 LLElement * LLInsertAtBeginning(LLElement * first, int key) 
 {
-    if(first == NULL)
+    LLElement *element = (LLElement*)malloc(sizeof(LLElement));
+    if(element != NULL)
     {
-        first = (LLElement*)malloc(sizeof(LLElement));
-        if(first != NULL)
-        {
-            first->key = key;
-            first->next = NULL;
-        }
-    }
-    else
-    {
-        LLElement *element = (LLElement*)malloc(sizeof(LLElement));
-        if(element != NULL)
-        {
-            element->key = key;
-            element->next = first;
-            first = element;
-        }
+        element->key = key;
+        element->next = first;
+        first = element;
     }
     return first;
 }
@@ -35,26 +23,14 @@ LLElement * LLInsertAtBeginning(LLElement * first, int key)
  */
 LLElement * LLInsertAtEnd(LLElement * first, int key) 
 {
-    if(first == NULL)
+    LLElement *element = (LLElement*)malloc(sizeof(LLElement)), **temporary = &first;
+    if(element != NULL)
     {
-        first = (LLElement*)malloc(sizeof(LLElement));
-        if(first != NULL)
-        {
-            first->key = key;
-            first->next = NULL;
-        }
-    }
-    else
-    {
-        LLElement *element = (LLElement*)malloc(sizeof(LLElement)), **temporary = &first;
-        if(element != NULL)
-        {
-            element->key = key;
-            element->next = NULL;
-            while(*temporary != NULL)
-                temporary = &((*temporary)->next);
-            *temporary = element;
-        }
+        element->key = key;
+        element->next = NULL;
+        while(*temporary != NULL)
+            temporary = &((*temporary)->next);
+        *temporary = element;
     }
     return first;
 }
@@ -68,28 +44,16 @@ LLElement * LLInsertAtEnd(LLElement * first, int key)
  */
 LLElement * LLInsertAtPosition(LLElement * first, int key, int position)
 {
-    if(first == NULL)
+    LLElement *element = (LLElement*)malloc(sizeof(LLElement)), **temporary;
+    if(element != NULL)
     {
-        first = (LLElement*)malloc(sizeof(LLElement));
-        if(first != NULL)
-        {
-            first->key = key;
-            first->next = NULL;
-        }
-    }
-    else
-    {
-        LLElement *element = (LLElement*)malloc(sizeof(LLElement)), **temporary;
-        if(element != NULL)
-        {
-            int counter;
-            temporary = &first;
-            for(counter = 0; counter < position; counter++)
-                temporary = &((*temporary)->next);
-            element->next = *temporary;
-            element->key = key;
-            *temporary = element;
-        }
+        int counter;
+        temporary = &first;
+        for(counter = 0; counter < position; counter++)
+            temporary = &((*temporary)->next);
+        element->next = *temporary;
+        element->key = key;
+        *temporary = element;
     }
     return first;
 }
