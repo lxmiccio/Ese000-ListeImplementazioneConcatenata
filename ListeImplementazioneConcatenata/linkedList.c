@@ -7,12 +7,12 @@
  */
 LLElement * LLInsertAtBeginning(LLElement * first, int key) 
 {
-    LLElement *element = (LLElement*)malloc(sizeof(LLElement));
-    if(element != NULL)
+    LLElement *elementToInsert = (LLElement*)malloc(sizeof(LLElement));
+    if(elementToInsert != NULL)
     {
-        element->key = key;
-        element->next = first;
-        first = element;
+        elementToInsert->key = key;
+        elementToInsert->next = first;
+        first = elementToInsert;
     }
     return first;
 }
@@ -23,14 +23,14 @@ LLElement * LLInsertAtBeginning(LLElement * first, int key)
  */
 LLElement * LLInsertAtEnd(LLElement * first, int key) 
 {
-    LLElement *element = (LLElement*)malloc(sizeof(LLElement)), **temporary = &first;
-    if(element != NULL)
+    LLElement *elementToInsert = (LLElement*)malloc(sizeof(LLElement)), **temporary = &first;
+    if(elementToInsert != NULL)
     {
-        element->key = key;
-        element->next = NULL;
         while(*temporary != NULL)
             temporary = &((*temporary)->next);
-        *temporary = element;
+        elementToInsert->key = key;
+        elementToInsert->next = NULL;
+        *temporary = elementToInsert;
     }
     return first;
 }
@@ -44,16 +44,18 @@ LLElement * LLInsertAtEnd(LLElement * first, int key)
  */
 LLElement * LLInsertAtPosition(LLElement * first, int key, int position)
 {
-    LLElement *element = (LLElement*)malloc(sizeof(LLElement)), **temporary;
-    if(element != NULL)
+    if(position >= 0 && position < LLSize(first))
     {
         int counter;
-        temporary = &first;
-        for(counter = 0; counter < position; counter++)
-            temporary = &((*temporary)->next);
-        element->next = *temporary;
-        element->key = key;
-        *temporary = element;
+        LLElement *elementToInsert = (LLElement*)malloc(sizeof(LLElement)), **temporary = &first;
+        if(elementToInsert != NULL)
+        {
+            for(counter = 0; counter < position; counter++)
+                temporary = &((*temporary)->next);
+            elementToInsert->key = key;
+            elementToInsert->next = *temporary;
+            *temporary = elementToInsert;
+        }
     }
     return first;
 }
@@ -63,7 +65,7 @@ LLElement * LLInsertAtPosition(LLElement * first, int key, int position)
  */
 int LLSize(LLElement * first)
 {
-    int size = 0;
+    int size;
     for(size = 0; first != NULL; size++)
         first = first->next;
     return size;
@@ -74,9 +76,12 @@ int LLSize(LLElement * first)
  */ 
 int LLGetKey(LLElement * first, int position)
 {
-    int counter;
-    for(counter = 0; counter < position; counter++)
-        first = first->next;
+    if(first != NULL && position >= 0 && position < LLSize(first))
+    {
+        int counter;
+        for(counter = 0; counter < position; counter++)
+            first = first->next; 
+    }   
     return first->key;
 }
 
@@ -87,16 +92,20 @@ int LLGetKey(LLElement * first, int position)
  */ 
 int LLFindKey(LLElement * first, int key, int startPosition)
 {
-    int counter, position = -1;
-    for(counter = 0; counter < startPosition; counter++)
-        first = first->next;
-    for(; first != NULL && position == -1; counter++)
+    int keyPosition = -1;
+    if(first != NULL && startPosition >= 0 && startPosition < LLSize(first))
     {
-        if(first->key == key)
-            position = counter;
-        first = first->next;
+        int counter;
+        for(counter = 0; counter < startPosition; counter++)
+            first = first->next;
+        for(; first != NULL && keyPosition == -1; counter++)
+        {
+            if(first->key == key)
+                keyPosition = counter;
+            first = first->next;
+        }
     }
-    return position;
+    return keyPosition;
 }
 
 /*
@@ -140,7 +149,7 @@ LLElement * LLRemoveLast(LLElement * first)
  */
 LLElement * LLRemoveAtPosition(LLElement * first, int position)
 {
-    if(first != NULL)
+    if(first != NULL && position >= 0 && position < LLSize(first))
     {
         int counter;
         LLElement *elementToDelete, **temporary = &first;
